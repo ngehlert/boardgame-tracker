@@ -1,15 +1,27 @@
 interface Player {
   name: string;
-  id: number;
+  extraPoints: number;
 }
 
 interface Game {
   name: string;
-  id: number;
   duration: number;
+}
+
+interface StorageData {
+  players: Array<Player>;
+  games: Array<Game>;
+  playedGames: Array<PlayedGame>;
+}
+
+interface PlayedGame {
+  placements: Array<Array<Player>>;
+  game: Game;
 }
 
 export {
   Player,
   Game,
+  PlayedGame,
+  StorageData
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Game, Player } from './types';
-import { CdkDragDrop, moveItemInArray, copyArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, copyArrayItem, transferArrayItem, CdkDragRelease } from '@angular/cdk/drag-drop';
+import { DataStorageService } from './data-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -9,38 +10,68 @@ import { CdkDragDrop, moveItemInArray, copyArrayItem } from '@angular/cdk/drag-d
 })
 export class AppComponent {
 
-  public players: Array<Player> = [
-    {id: 1, name: 'Nico'},
-    {id: 2, name: 'Tom'},
-    {id: 3, name: 'Sevi'},
-    {id: 4, name: 'Milli'},
-    {id: 5, name: 'Ross'},
-    {id: 6, name: 'Joey'},
-    {id: 7, name: 'Chandler'},
-  ];
-  public games: Array<Game> = [
-    { id: 1, name: '7 Wonders', duration: 30},
-    { id: 2, name: 'Camel Cup', duration: 30},
-    { id: 3, name: 'Der weisse Hai', duration: 60},
-  ];
+  private players: Array<Player> = [];
+  public availablePlayers: Array<Player> = []
+  public games: Array<Game> = [];
 
-  public playingPlayers: Array<Player> = []
+  public placements: Array<Array<Player>> = [[]]
   public playedGame: Game | null = null;
 
   public isAddingGameOpen: boolean = false;
   public newGameName: string = '';
-  public newGameDuration: number = 30;
+  public newGameDuration: string = '30';
 
-  public dropPlayer(event: CdkDragDrop<Array<Player>>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      copyArrayItem(
-        event.previousContainer.data,
-        event.container.data,
+  public isAddingPlayerOpen: boolean = false;
+  public newPlayerName: string = '';
+
+  constructor(
+    private store: DataStorageService,
+  ) {
+    ({games: this.games, players: this.players} = this.store.load());
+    this.availablePlayers = [...this.players];
+  }
+
+  public handleDropOutOfBound(
+    event: CdkDragDrop<Array<Array<Player>>, Array<Player>>,
+  ): void {
+    if (!event.isPointerOverContainer) {
+      this.placements[event.item.data].splice(event.previousIndex, 1);
+    }
+  }
+
+  public dropPlayer(
+    event: CdkDragDrop<Array<Array<Player>>, Array<Player>>,
+  ) {
+    if (event.previousContainer.id === event.container.id) {
+      moveItemInArray(
+        this.placements[event.currentIndex],
         event.previousIndex,
         event.currentIndex,
       );
+    } else if (event.previousContainer.orientation === 'horizontal') {
+      if (!this.placements[event.currentIndex]) {
+        this.placements[event.currentIndex] = [];
+      }
+      transferArrayItem(
+        this.placements[event.item.data],
+        this.placements[event.currentIndex],
+        event.previousIndex,
+        this.placements[event.currentIndex].length,
+      );
+    } else {
+      if (!this.placements[event.currentIndex]) {
+        this.placements[event.currentIndex] = [];
+      }
+      transferArrayItem(
+        event.previousContainer.data,
+        this.placements[event.currentIndex],
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+
+    if (this.placements[this.placements.length - 1].length > 0) {
+      this.placements.push([]);
     }
   }
 
@@ -49,14 +80,61 @@ export class AppComponent {
   }
 
   public savePlayedGame(): void {
-    console.log(this.playingPlayers);
+    const placementsContainPlayer: boolean = !!(this.placements.find((players: Array<Player>) => {
+      return players.length > 0;
+    }))
+    if (placementsContainPlayer || !this.playedGame) {
+      return;
+    }
+    this.store.addPlayedGame({
+      placements: this.placements,
+      game: this.playedGame,
+    });
+    this.clearPlayedGame();
   }
 
-  public addGame(): void {
+  public clearPlayedGame(): void {
+    this.playedGame = null;
+    this.placements = [[]];
+    this.availablePlayers = [...this.players];
+
+  }
+
+  public toggleAddGameForm(): void {
     this.isAddingGameOpen = !this.isAddingGameOpen;
   }
 
-  public saveNewGame(): void {
+  public toggleAddPlayerForm(): void {
+    this.isAddingPlayerOpen = !this.isAddingPlayerOpen;
+  }
 
+  public saveNewGame(): void {
+    if (!this.newGameName.length || !this.newGameDuration.length) {
+      return;
+    }
+    this.store.addGame({
+      name: this.newGameName,
+      duration: parseInt(String(this.newGameDuration), 10),
+    });
+    this.newGameName = '';
+    this.newGameDuration = '30';
+
+    this.games = this.store.getGames();
+  }
+
+  public saveNewPlayer(): void {
+    if (!this.newPlayerName.length) {
+      return;
+    }
+
+    this.store.addPlayer({
+      name: this.newPlayerName,
+      extraPoints: 0,
+    });
+    this.newPlayerName = '';
+
+    this.players = this.store.getPlayers();
+    // needed to properly set the available players list
+    this.clearPlayedGame();
   }
 }

@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { DataStorageService } from './data-storage.service';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -26,8 +28,11 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     FormsModule,
     MatInputModule,
+    MatCardModule,
   ],
-  providers: [],
+  providers: [
+    DataStorageService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

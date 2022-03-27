@@ -1,11 +1,19 @@
-.container {  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 120px 1fr 120px;
+  gap: 12px 24px;
   grid-template-areas:
-    "players games"
-    "actions games";
+    ". actions ."
+    "players actions games"
+    ". actions .";
+  justify-items: stretch;
+  align-items: stretch;
+  align-content: start;
+  padding: 24px;
+  height: calc(100% - 48px);
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
 .players {
@@ -14,45 +22,28 @@
 
 .games {
   grid-area: games;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    "header adding"
-    "content content";
-
-  &__header {
-    grid-area: header;
-  }
-  &__actions {
-    grid-area: adding;
-    margin-left: 24px;
-  }
-
-  &__content {
-    grid-area: content;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
 
+.card {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 32px);
+  overflow: hidden;
+}
+
+.mat-card-content {
+  overflow: auto;
+  padding: 4px 0;
+}
 
 .actions {
   grid-area: actions;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-  align-items: flex-start;
 }
 
-.list-container {
-  width: 400px;
-  max-width: 100%;
-  margin: 0 25px 25px 0;
-  display: inline-block;
-  vertical-align: top;
+.fixed-card-button {
+  position: absolute;
+  top: 8px;
+  right: 12px;
 }
 
 .list {
@@ -62,6 +53,8 @@
   border-radius: 4px;
   overflow: overlay;
   display: block;
+  width: calc(100% - 2px);
+  margin-top: 24px !important;
 
   &--small {
     max-height: 340px;
@@ -80,6 +73,38 @@
   cursor: move;
   background: white;
   font-size: 14px;
+}
+
+.horizontal-list {
+  max-width: 100%;
+  border: solid 1px #ccc;
+  min-height: 60px;
+  display: flex;
+  flex-direction: row;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.horizontal-box {
+  padding: 20px 10px;
+  border-right: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 .cdk-drag-preview {
