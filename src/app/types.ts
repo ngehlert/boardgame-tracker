@@ -17,6 +17,7 @@ interface StorageData {
 interface PlayedGame {
   placements: Array<Array<Player>>;
   game: Game;
+  timestamp: number;
 }
 
 export {

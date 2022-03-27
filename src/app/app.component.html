@@ -163,6 +163,17 @@
         style="margin: 24px 24px 0 0"
       >Clear</button>
       <button mat-raised-button color="accent" (click)="savePlayedGame()">Speichern</button>
+
+      <h2 style="margin-top: 36px;">Letzten Einträge</h2>
+      <mat-list>
+        <ng-template ngFor let-playedGame [ngForOf]="lastPlayedGames">
+          <mat-list-item>
+            <div mat-line>{{playedGame.game.name}}</div>
+            <div mat-line>{{getTimeFromTimestampe(playedGame.timestamp)}}</div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </ng-template>
+      </mat-list>
     </mat-card-content>
   </mat-card>
 </section>

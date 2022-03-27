@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Game, Player } from './types';
-import { CdkDragDrop, moveItemInArray, copyArrayItem, transferArrayItem, CdkDragRelease } from '@angular/cdk/drag-drop';
+import { Game, PlayedGame, Player } from './types';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DataStorageService } from './data-storage.service';
 
 @Component({
@@ -13,6 +13,8 @@ export class AppComponent {
   private players: Array<Player> = [];
   public availablePlayers: Array<Player> = []
   public games: Array<Game> = [];
+  public playedGames: Array<PlayedGame> = [];
+  public lastPlayedGames: Array<PlayedGame> = [];
 
   public placements: Array<Array<Player>> = this.getEmptyPlacementsList();
   public playedGame: Game | null = null;
@@ -27,8 +29,9 @@ export class AppComponent {
   constructor(
     private store: DataStorageService,
   ) {
-    ({games: this.games, players: this.players} = this.store.load());
+    ({games: this.games, players: this.players, playedGames: this.playedGames} = this.store.load());
     this.availablePlayers = [...this.players];
+    this.lastPlayedGames = this.getLastPlayedGames();
   }
 
   public handleDropOutOfBound(
@@ -82,16 +85,19 @@ export class AppComponent {
   }
 
   public savePlayedGame(): void {
-    const placementsContainPlayer: boolean = !!(this.placements.find((players: Array<Player>) => {
-      return players.length > 0;
-    }))
-    if (placementsContainPlayer || !this.playedGame) {
+    const placementsContainNoPlayer: boolean = this.placements.every((players: Array<Player>) => {
+      return players.length === 0;
+    });
+    if (placementsContainNoPlayer || !this.playedGame) {
       return;
     }
     this.store.addPlayedGame({
       placements: this.placements,
       game: this.playedGame,
+      timestamp: new Date().getTime(),
     });
+    this.playedGames = this.store.getPlayedGames();
+    this.lastPlayedGames = this.getLastPlayedGames();
     this.clearPlayedGame();
   }
 
@@ -138,6 +144,20 @@ export class AppComponent {
     this.players = this.store.getPlayers();
     // needed to properly set the available players list
     this.clearPlayedGame();
+  }
+
+  public getLastPlayedGames(): Array<PlayedGame> {
+    return this.playedGames
+      .sort((gameA: PlayedGame, gameB: PlayedGame) => {
+        return gameB.timestamp - gameA.timestamp;
+      })
+      .slice(0, 3);
+  }
+
+  public getTimeFromTimestampe(timestamp: number): string {
+    const date = new Date(timestamp);
+
+    return `${date.getHours()}:${date.getMinutes()}`;
   }
 
   private validatePlacements(): void {
