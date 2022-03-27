@@ -14,7 +14,7 @@ export class AppComponent {
   public availablePlayers: Array<Player> = []
   public games: Array<Game> = [];
 
-  public placements: Array<Array<Player>> = [[]]
+  public placements: Array<Array<Player>> = this.getEmptyPlacementsList();
   public playedGame: Game | null = null;
 
   public isAddingGameOpen: boolean = false;
@@ -73,6 +73,8 @@ export class AppComponent {
     if (this.placements[this.placements.length - 1].length > 0) {
       this.placements.push([]);
     }
+
+    this.validatePlacements();
   }
 
   public dropGame(event: CdkDragDrop<Array<Game>>) {
@@ -95,7 +97,7 @@ export class AppComponent {
 
   public clearPlayedGame(): void {
     this.playedGame = null;
-    this.placements = [[]];
+    this.placements = this.getEmptyPlacementsList();
     this.availablePlayers = [...this.players];
 
   }
@@ -136,5 +138,22 @@ export class AppComponent {
     this.players = this.store.getPlayers();
     // needed to properly set the available players list
     this.clearPlayedGame();
+  }
+
+  private validatePlacements(): void {
+    this.placements.forEach((players: Array<Player>, index: number) => {
+      if (players.length <= 1) {
+        return;
+      }
+      for (let i: number = 1; i < players.length; i++) {
+        if ((this.placements[index + i] || []).length) {
+          this.placements.splice(index + 1, 0, []);
+        }
+      }
+    });
+  }
+
+  private getEmptyPlacementsList(): Array<Array<Player>> {
+    return [[], [], [], []]
   }
 }

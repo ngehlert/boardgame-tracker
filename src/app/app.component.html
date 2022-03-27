@@ -37,7 +37,14 @@
           class="list"
           cdkDropListSortingDisabled
         >
-          <div class="list-entry" *ngFor="let item of availablePlayers" cdkDrag>{{item.name}}</div>
+          <div
+            class="list-entry"
+            *ngFor="let item of availablePlayers"
+            cdkDrag
+          >
+            {{item.name}}
+            <div *cdkDragPreview class="list-entry list-entry--preview">{{item.name}}</div>
+          </div>
         </div>
       </div>
     </mat-card-content>
@@ -90,7 +97,14 @@
           class="list"
           cdkDropListSortingDisabled
         >
-          <div class="list-entry" *ngFor="let item of games" cdkDrag>{{item.name}} ({{item.duration}})</div>
+          <div
+            class="list-entry"
+            *ngFor="let item of games"
+            cdkDrag
+          >
+            {{item.name}} ({{item.duration}})
+            <div *cdkDragPreview class="list-entry list-entry--preview">{{item.name}} ({{item.duration}})</div>
+          </div>
         </div>
       </div>
     </mat-card-content>
@@ -99,6 +113,7 @@
     <mat-card-title>Spielergebnis</mat-card-title>
     <mat-card-subtitle>Hier werden einzelne Spielergebnisse eingetragen</mat-card-subtitle>
     <mat-card-content>
+      <h2>Spieler</h2>
       <div
         cdkDropList
         #placementsList="cdkDropList"
@@ -106,7 +121,11 @@
         class="list"
         (cdkDropListDropped)="dropPlayer($event)"
       >
-        <div class="list-entry" *ngFor="let placement of placements; let i = index" cdkDrag>
+        <div
+          class="list-entry list-entry--nested-list"
+          *ngFor="let placement of placements; let i = index"
+          cdkDrag
+        >
           {{i + 1}}.
           <div
             cdkDropList
@@ -122,11 +141,13 @@
               cdkDrag
               [cdkDragData]="i"
               (cdkDragDropped)="handleDropOutOfBound($event)"
-            >{{player.name}}</div>
+            >
+              {{player.name}}
+            </div>
           </div>
         </div>
       </div>
-      <h2>Spiel</h2>
+      <h2 style="margin-top: 24px;">Spiel</h2>
       <div
         cdkDropList
         #playedGameList="cdkDropList"
@@ -136,7 +157,11 @@
       >
         <div class="list-entry" cdkDrag *ngIf="playedGame">{{playedGame.name}}</div>
       </div>
-      <button mat-flat-button (click)="clearPlayedGame()">Clear</button>
+      <button
+        mat-flat-button
+        (click)="clearPlayedGame()"
+        style="margin: 24px 24px 0 0"
+      >Clear</button>
       <button mat-raised-button color="accent" (click)="savePlayedGame()">Speichern</button>
     </mat-card-content>
   </mat-card>
