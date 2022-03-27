@@ -29,11 +29,17 @@ export class DataStorageService {
   }
 
   public getPlayers(): Array<Player> {
-    return this.getLocalStorageData<Array<Player>>(DataKeys.Players);
+    return this.getLocalStorageData<Array<Player>>(DataKeys.Players)
+      .sort((playerA: Player, playerB: Player) => {
+        return playerA.name.localeCompare(playerB.name);
+      });
   }
 
   public getGames(): Array<Game> {
-    return this.getLocalStorageData<Array<Game>>(DataKeys.Games);
+    return this.getLocalStorageData<Array<Game>>(DataKeys.Games)
+      .sort((playerA: Game, playerB: Game) => {
+        return playerA.name.localeCompare(playerB.name);
+      });;
   }
 
   public getPlayedGames(): Array<PlayedGame> {
