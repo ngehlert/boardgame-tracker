@@ -48,6 +48,15 @@ export class DataStorageService {
 
   public addPlayedGame(playedGame: PlayedGame): void {
     const playedGames: Array<PlayedGame> = this.getPlayedGames();
+
+    // Trim empty placement arrays at the end
+    for (let i: number = playedGame.placements.length - 1; i >= 0; i--) {
+      if (playedGame.placements[i].length === 0) {
+        playedGame.placements[i].splice(i, 1);
+      } else {
+        break;
+      }
+    }
     playedGames.push(playedGame);
     this.setLocalStorageData(DataKeys.PlayedGames, playedGames);
   }
