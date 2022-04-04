@@ -9,7 +9,7 @@
     <mat-card-subtitle>Liste aller Spieler</mat-card-subtitle>
     <mat-card-content>
       <div class="content-wrapper">
-        <form (submit)="saveNewPlayer()" class="games__content"  *ngIf="isAddingPlayerOpen">
+        <form (submit)="saveNewPlayer()" class="content-wrapper"  *ngIf="isAddingPlayerOpen">
           <mat-form-field appearance="outline">
             <mat-label>Name</mat-label>
             <input
@@ -59,7 +59,7 @@
     <mat-card-subtitle>Liste aller Spiele</mat-card-subtitle>
     <mat-card-content>
       <div class="content-wrapper">
-        <form (submit)="saveNewGame()" class="games__content" *ngIf="isAddingGameOpen">
+        <form (submit)="saveNewGame()" class="content-wrapper" *ngIf="isAddingGameOpen">
           <mat-form-field appearance="outline">
             <mat-label>Spielname</mat-label>
             <input
@@ -78,6 +78,13 @@
               name="gameDuration"
             >
           </mat-form-field>
+          <mat-checkbox [(ngModel)]="newGameIsCoopGame" name="isCoopGame" color="primary">Co-op Spiel</mat-checkbox>
+          <mat-checkbox
+            [(ngModel)]="newGameIsSpecialGame"
+            name="isSpecialGame"
+            color="primary"
+            *ngIf="isAdmin"
+          >Special Game</mat-checkbox>
           <button
             mat-stroked-button
             color="primary"
@@ -101,9 +108,12 @@
             class="list-entry"
             *ngFor="let item of games"
             cdkDrag
+            [class.list-entry--special-game]="item.isSpecialGame"
           >
-            {{item.name}} ({{item.duration}})
-            <div *cdkDragPreview class="list-entry list-entry--preview">{{item.name}} ({{item.duration}})</div>
+            {{item.name}} ({{item.duration}}) <mat-icon *ngIf="item.isCoopGame">groups</mat-icon>
+            <div *cdkDragPreview class="list-entry list-entry--preview">
+              {{item.name}} ({{item.duration}})
+            </div>
           </div>
         </div>
       </div>
@@ -155,7 +165,14 @@
         class="list"
         (cdkDropListDropped)="dropGame($event)"
       >
-        <div class="list-entry" cdkDrag *ngIf="playedGame">{{playedGame.name}}</div>
+        <div
+          class="list-entry"
+          [class.list-entry--special-game]="playedGame && playedGame.isSpecialGame"
+          cdkDrag
+          *ngIf="playedGame"
+        >
+          {{playedGame.name}} ({{playedGame.duration}}) <mat-icon *ngIf="playedGame.isCoopGame">groups</mat-icon>
+        </div>
       </div>
       <button
         mat-flat-button

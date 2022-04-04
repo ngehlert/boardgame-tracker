@@ -4,6 +4,7 @@ import { DataStorageService } from './data-storage.service';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DecimalPipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   ],
   providers: [
     DataStorageService,
+    DecimalPipe,
   ],
   bootstrap: [
     AppComponent,

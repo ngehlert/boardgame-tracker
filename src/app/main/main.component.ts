@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Game, PlayedGame, Player } from '../types';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DataStorageService } from '../data-storage.service';
@@ -8,7 +8,7 @@ import { DataStorageService } from '../data-storage.service';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
 
   private players: Array<Player> = [];
   public availablePlayers: Array<Player> = []
@@ -22,9 +22,13 @@ export class MainComponent {
   public isAddingGameOpen: boolean = false;
   public newGameName: string = '';
   public newGameDuration: string = '30';
+  public newGameIsCoopGame: boolean = false;
+  public newGameIsSpecialGame: boolean = false;
 
   public isAddingPlayerOpen: boolean = false;
   public newPlayerName: string = '';
+
+  public isAdmin: boolean = false;
 
   constructor(
     private store: DataStorageService,
@@ -32,6 +36,10 @@ export class MainComponent {
     ({games: this.games, players: this.players, playedGames: this.playedGames} = this.store.load());
     this.availablePlayers = [...this.players];
     this.lastPlayedGames = this.getLastPlayedGames();
+  }
+
+  public ngOnInit(): void {
+    this.isAdmin = new URLSearchParams(window.location.search).get('admin') === 'start01';
   }
 
   public handleDropOutOfBound(
@@ -123,6 +131,8 @@ export class MainComponent {
     this.store.addGame({
       name: this.newGameName,
       duration: parseInt(String(this.newGameDuration), 10),
+      isCoopGame: this.newGameIsCoopGame,
+      isSpecialGame: this.newGameIsSpecialGame,
     });
     this.newGameName = '';
     this.newGameDuration = '30';

@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
     MatCardModule,
     MatListModule,
     RouterModule.forChild(routes),
+    MatCheckboxModule,
   ]
 })
 export class MainModule { }

@@ -39,7 +39,7 @@ export class DataStorageService {
     return this.getLocalStorageData<Array<Game>>(DataKeys.Games)
       .sort((playerA: Game, playerB: Game) => {
         return playerA.name.localeCompare(playerB.name);
-      });;
+      });
   }
 
   public getPlayedGames(): Array<PlayedGame> {
@@ -69,7 +69,13 @@ export class DataStorageService {
 
   public addGame(game: Game): void {
     const games: Array<Game> = this.getGames();
-    games.push(game);
+    const alreadyExistingGame: Game | undefined = games.find((current: Game) => current.name === game.name);
+    if (alreadyExistingGame) {
+      alreadyExistingGame.isCoopGame = game.isCoopGame;
+      alreadyExistingGame.duration = game.duration;
+    } else {
+      games.push(game);
+    }
     this.setLocalStorageData(DataKeys.Games, games);
   }
 

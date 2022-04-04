@@ -6,6 +6,8 @@ interface Player {
 interface Game {
   name: string;
   duration: number;
+  isCoopGame: boolean;
+  isSpecialGame: boolean;
 }
 
 interface StorageData {
