@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { ColDef, ValueFormatterParams } from 'ag-grid-community';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AgGridEvent, ColDef, ValueFormatterParams } from 'ag-grid-community';
 import { DataStorageService } from '../data-storage.service';
 import { Game, PlayedGame, Player } from '../types';
 import { ValueGetterParams } from 'ag-grid-community/dist/lib/entities/colDef';
 import { DecimalPipe } from '@angular/common';
+import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-stats',
@@ -11,10 +12,14 @@ import { DecimalPipe } from '@angular/common';
   styleUrls: ['./stats.component.scss']
 })
 export class StatsComponent implements OnInit {
+  @ViewChild('agGrid', {static: true}) public agGrid!: AgGridAngular;
 
   public columnDefs: Array<ColDef> = [];
   public defaultColDef: ColDef = this.getDefaultColDef();
   public rowData: Array<TableEntry> = [];
+
+  public totalGames: number = 0;
+  public totalUniqueGames: Set<string> = new Set();
 
   constructor(
     private store: DataStorageService,
@@ -24,6 +29,14 @@ export class StatsComponent implements OnInit {
   ngOnInit(): void {
     this.columnDefs = this.getColumnDefs();
     this.rowData = this.getRowData();
+
+    this.agGrid.gridReady.subscribe((() => {
+      this.agGrid.api.sizeColumnsToFit();
+    }));
+  }
+
+  public onSortChanged(e: AgGridEvent) {
+    e.api.refreshCells();
   }
 
   private getDefaultColDef(): ColDef {
@@ -35,7 +48,9 @@ export class StatsComponent implements OnInit {
         }
 
         return params.value;
-      }
+      },
+      sortable: true,
+      sortingOrder: ['desc', 'asc'],
     };
   }
 
@@ -57,6 +72,8 @@ export class StatsComponent implements OnInit {
 
       const game: Game = games.find((current: Game) => current.name === playedGame.game.name) || playedGame.game;
       const gameTime: number = game.duration;
+      this.totalUniqueGames.add(game.name);
+      this.totalGames++;
       playedGame.placements.forEach((players: Array<Player>, index: number) => {
         players.forEach((player: Player) => {
           const tableEntry: TableEntry | undefined = tableEntryByPlayerName.get(player.name);
@@ -94,6 +111,12 @@ export class StatsComponent implements OnInit {
   private getColumnDefs(): Array<ColDef> {
     return [
       {
+        headerName: '',
+        valueGetter: 'node.rowIndex + 1',
+        width: 50,
+        sortable: false,
+      },
+      {
         headerName: 'Name',
         field: 'player.name',
         cellStyle: {'text-align': 'left'},
@@ -125,10 +148,6 @@ export class StatsComponent implements OnInit {
             return result + current.score;
           }, 0);
         }
-      },
-      {
-        headerName: 'Extra Punkte',
-        field: 'player.extraPoints',
       },
     ];
   }

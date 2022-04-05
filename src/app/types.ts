@@ -1,6 +1,5 @@
 interface Player {
   name: string;
-  extraPoints: number;
 }
 
 interface Game {

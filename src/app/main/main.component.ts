@@ -147,7 +147,6 @@ export class MainComponent implements OnInit {
 
     this.store.addPlayer({
       name: this.newPlayerName,
-      extraPoints: 0,
     });
     this.newPlayerName = '';
 
