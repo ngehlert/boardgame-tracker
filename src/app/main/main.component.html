@@ -184,11 +184,18 @@
       <h2 style="margin-top: 36px;">Letzten Einträge</h2>
       <mat-list>
         <ng-template ngFor let-playedGame [ngForOf]="lastPlayedGames">
-          <mat-list-item>
+          <mat-list-item style="border-bottom: 1px solid rgba(0, 0, 0, 0.2)">
             <div mat-line>{{playedGame.game.name}}</div>
-            <div mat-line>{{getTimeFromTimestampe(playedGame.timestamp)}}</div>
+            <div mat-line>{{getTimeFromTimestamp(playedGame.timestamp)}}</div>
+            <div mat-line>{{getPlayersFromPlacements(playedGame.placements)}}</div>
+            <button
+              mat-icon-button
+              (click)="deletePlayedGame(playedGame)"
+              *ngIf="isAdmin"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
           </mat-list-item>
-          <mat-divider></mat-divider>
         </ng-template>
       </mat-list>
     </mat-card-content>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Game, PlayedGame, Player } from '../types';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DataStorageService } from '../data-storage.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-main',
@@ -32,6 +33,7 @@ export class MainComponent implements OnInit {
 
   constructor(
     private store: DataStorageService,
+    private datePipe: DatePipe,
   ) {
     ({games: this.games, players: this.players, playedGames: this.playedGames} = this.store.load());
     this.availablePlayers = [...this.players];
@@ -160,13 +162,30 @@ export class MainComponent implements OnInit {
       .sort((gameA: PlayedGame, gameB: PlayedGame) => {
         return gameB.timestamp - gameA.timestamp;
       })
-      .slice(0, 3);
+      .slice(0, 10);
   }
 
-  public getTimeFromTimestampe(timestamp: number): string {
+  public getTimeFromTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
 
-    return `${date.getHours()}:${date.getMinutes()}`;
+    return this.datePipe.transform(date, 'short') || '';
+  }
+
+  public getPlayersFromPlacements(placements: Array<Array<Player>>): string {
+    return placements.reduce((result: Array<Player>, current: Array<Player>) => {
+      result.push(...current);
+
+      return result;
+    }, [])
+      .map((player: Player) => player.name)
+      .join(', ');
+  }
+
+  public deletePlayedGame(playedGame: PlayedGame): void {
+    this.store.removePlayedGame(playedGame);
+
+    this.playedGames = this.store.getPlayedGames();
+    this.lastPlayedGames = this.getLastPlayedGames();
   }
 
   private validatePlacements(): void {

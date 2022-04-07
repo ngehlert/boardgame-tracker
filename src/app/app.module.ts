@@ -4,7 +4,7 @@ import { DataStorageService } from './data-storage.service';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -18,6 +18,7 @@ import { DecimalPipe } from '@angular/common';
   providers: [
     DataStorageService,
     DecimalPipe,
+    DatePipe,
   ],
   bootstrap: [
     AppComponent,

@@ -61,6 +61,20 @@ export class DataStorageService {
     this.setLocalStorageData(DataKeys.PlayedGames, playedGames);
   }
 
+  public removePlayedGame(playedGame: PlayedGame): void {
+    const playedGames: Array<PlayedGame> = this.getPlayedGames();
+
+    const index: number = playedGames.findIndex((current: PlayedGame) => {
+      return this.arePlayedGamesEqual(playedGame, current);
+    });
+
+    if (index > -1) {
+      playedGames.splice(index, 1);
+    }
+
+    this.setLocalStorageData(DataKeys.PlayedGames, playedGames);
+  }
+
   public addPlayer(player: Player): void {
     const players: Array<Player> = this.getPlayers();
     players.push(player);
@@ -89,5 +103,10 @@ export class DataStorageService {
 
   private getLocalStorageKey(key: DataKeys): string {
     return `${this.storageKey}-${this.customGameName}-${key}`;
+  }
+
+  private arePlayedGamesEqual(gameA: PlayedGame, gameB: PlayedGame): boolean {
+    return gameA.game.name === gameB.game.name
+      && gameA.timestamp === gameB.timestamp;
   }
 }

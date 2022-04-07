@@ -11,7 +11,7 @@
   align-items: stretch;
   align-content: start;
   padding: 24px;
-  height: calc(100% - 48px);
+  height: calc(100vh - 48px);
   width: calc(100% - 48px);
 }
 
@@ -51,7 +51,6 @@
   min-height: 60px;
   background: white;
   border-radius: 4px;
-  overflow: overlay;
   display: block;
   width: calc(100% - 2px);
 
