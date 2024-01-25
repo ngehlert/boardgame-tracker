@@ -195,7 +195,9 @@ export class MainComponent implements OnInit {
       }
       for (let i: number = 1; i < players.length; i++) {
         if ((this.placements[index + i] || []).length) {
-          this.placements.splice(index + 1, 0, []);
+          if (!this.playedGame?.isCoopGame) {
+            this.placements.splice(index + 1, 0, []);
+          }
         }
       }
     });

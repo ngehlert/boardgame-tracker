@@ -48,6 +48,9 @@
         </div>
       </div>
     </mat-card-content>
+    <div class="card--disabled" *ngIf="!playedGame">
+      Bitte zuerst ein Spiel auswählen
+    </div>
   </mat-card>
   <mat-card class="card games mat-elevation-z4">
     <mat-card-title>

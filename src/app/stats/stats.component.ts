@@ -82,7 +82,8 @@ export class StatsComponent implements OnInit {
           }
           let score: number = 0;
           if (players.length === 1 || game.isCoopGame) {
-            score = (totalAmountOfPlayers - index) * gameTime;
+            const amountOfTeamsInvolved: number = playedGame.placements.filter((players: Array<Player>) => players.length).length;
+            score = (amountOfTeamsInvolved - index) * gameTime;
           } else {
             for (let i: number = 0; i < players.length; i++) {
               score += (totalAmountOfPlayers - index - i) * gameTime;

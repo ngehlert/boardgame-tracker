@@ -28,6 +28,19 @@
   flex-direction: column;
   height: calc(100% - 32px);
   overflow: hidden;
+
+  &--disabled {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 1.5rem;
+    margin: -16px 0 0 -16px;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+  }
 }
 
 .mat-card-content {

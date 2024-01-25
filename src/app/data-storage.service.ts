@@ -93,6 +93,16 @@ export class DataStorageService {
     this.setLocalStorageData(DataKeys.Games, games);
   }
 
+  public dangerouslySetPlayers(players: Array<Player>) {
+    this.setLocalStorageData(DataKeys.Players, players);
+  }
+  public dangerouslySetGames(games: Array<Game>) {
+    this.setLocalStorageData(DataKeys.Games, games);
+  }
+  public dangerouslySetPlayedGames(playedGames: Array<PlayedGame>) {
+    this.setLocalStorageData(DataKeys.PlayedGames, playedGames);
+  }
+
   private getLocalStorageData<T>(key: DataKeys): T {
     return JSON.parse(localStorage.getItem(this.getLocalStorageKey(key)) || '[]');
   }
