@@ -83,15 +83,30 @@ export class MainComponent implements OnInit {
       );
     }
 
-    if (this.placements[this.placements.length - 1].length > 0) {
-      this.placements.push([]);
+    this.addEmptyLastEntry();
+    this.validatePlacements();
+  }
+
+  public selectPlayer(player: Player): void {
+    const placementIndex: number = this.placements.findIndex((current => current.length === 0));
+    if (placementIndex > -1) {
+      this.placements[placementIndex] = [player];
+    }
+    const playerIndex: number = this.availablePlayers.findIndex((current => current === player));
+    if (playerIndex > -1 ) {
+      this.availablePlayers.splice(playerIndex, 1);
     }
 
+    this.addEmptyLastEntry();
     this.validatePlacements();
   }
 
   public dropGame(event: CdkDragDrop<Array<Game>>) {
     this.playedGame = event.previousContainer.data[event.previousIndex];
+  }
+
+  public selectGame(game: Game): void {
+    this.playedGame = game;
   }
 
   public savePlayedGame(): void {
@@ -201,6 +216,12 @@ export class MainComponent implements OnInit {
         }
       }
     });
+  }
+
+  private addEmptyLastEntry(): void {
+    if (this.placements[this.placements.length - 1].length > 0) {
+      this.placements.push([]);
+    }
   }
 
   private getEmptyPlacementsList(): Array<Array<Player>> {
