@@ -1,13 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { Game, PlayedGame, Player } from '../types';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { DataStorageService } from '../data-storage.service';
-import { DatePipe } from '@angular/common';
+import {CommonModule, DatePipe, DecimalPipe} from '@angular/common';
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {FormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {MatCardModule} from "@angular/material/card";
+import {MatListModule} from "@angular/material/list";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    DragDropModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatInputModule,
+    MatCardModule,
+    MatListModule,
+    MatCheckboxModule,
+  ],
+  providers: [
+    DatePipe,
+    DecimalPipe,
+  ]
 })
 export class MainComponent implements OnInit {
 

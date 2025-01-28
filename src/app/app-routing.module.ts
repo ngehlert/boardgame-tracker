@@ -1,18 +1,20 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import {AdminComponent} from "./admin/admin.component";
+import {MainComponent} from "./main/main.component";
+import {StatsComponent} from "./stats/stats.component";
 
-const routes: Routes = [
+const ApplicationRoutes: Routes = [
   {
     path: 'stats',
-    loadChildren: () => import('./stats/stats.module').then(m => m.StatsModule),
+    component: StatsComponent,
   },
   {
     path: 'main',
-    loadChildren: () => import('./main/main.module').then(m => m.MainModule),
+    component: MainComponent,
   },
   {
     path: 'admin',
-    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
+    component: AdminComponent,
   },
   {
     path: '',
@@ -21,8 +23,4 @@ const routes: Routes = [
   },
 ];
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
+export {ApplicationRoutes};

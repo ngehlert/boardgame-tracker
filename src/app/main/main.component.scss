@@ -1,3 +1,7 @@
+:host {
+
+}
+
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -28,6 +32,7 @@
   flex-direction: column;
   height: calc(100% - 32px);
   overflow: hidden;
+  padding: 16px;
 
   &--disabled {
     position: absolute;

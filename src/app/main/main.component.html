@@ -188,7 +188,7 @@
 
       <h2 style="margin-top: 36px;">Letzten Einträge</h2>
       <mat-list>
-        <ng-template ngFor let-playedGame [ngForOf]="lastPlayedGames">
+        @for(playedGame of lastPlayedGames; track playedGame.timestamp) {
           <mat-list-item style="border-bottom: 1px solid rgba(0, 0, 0, 0.2)">
             <div mat-line>{{playedGame.game.name}}</div>
             <div mat-line>{{getTimeFromTimestamp(playedGame.timestamp)}}</div>
@@ -201,7 +201,7 @@
               <mat-icon>delete</mat-icon>
             </button>
           </mat-list-item>
-        </ng-template>
+        }
       </mat-list>
     </mat-card-content>
   </mat-card>
